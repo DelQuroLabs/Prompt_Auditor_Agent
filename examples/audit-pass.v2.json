@@ -1,0 +1,24 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 0,
+  "audit_round": 1,
+  "verdict": "PASS",
+  "summary": "The supplied implementation satisfies the listed criteria by static inspection; no blocking defect was found in the supplied scope.",
+  "scope_review": {
+    "reviewed_paths": ["moving_average.py"],
+    "unavailable_context": []
+  },
+  "verification_assessment": {
+    "status": "static_only",
+    "note": "No project test runner was available; the source was reviewed statically."
+  },
+  "findings": [],
+  "regression_check": [],
+  "what_held_up": "The implementation handles invalid windows before division and includes the final complete window.",
+  "open_questions": [],
+  "rework_brief": null,
+  "escalation": null,
+  "round_limit_reached": false
+}

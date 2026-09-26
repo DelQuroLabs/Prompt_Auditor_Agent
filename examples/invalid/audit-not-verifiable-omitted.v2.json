@@ -1,0 +1,40 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 2,
+  "audit_round": 3,
+  "verdict": "FAIL",
+  "summary": "Invalid fixture: a not-verifiable prior finding is missing from current findings.",
+  "scope_review": {"reviewed_paths": ["moving_average.py"], "unavailable_context": []},
+  "verification_assessment": {"status": "static_only", "note": "Static review only."},
+  "findings": [
+    {
+      "id": "F3",
+      "severity": "MAJOR",
+      "category": "correctness",
+      "file": "moving_average.py",
+      "lines": "1-4",
+      "quote": "window validation",
+      "trigger": "Use an input that depends on the prior unresolved window behavior.",
+      "expected": "Preserve the unresolved F2 issue in current findings while reporting its status.",
+      "actual": "F2 is omitted and an unrelated F3 is reported.",
+      "impact": "The audit chain loses an unresolved issue.",
+      "fix": "Keep F2 in current findings as not verifiable, or provide evidence that resolves it.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "The immediately previous report lists F2 in must_fix."
+    }
+  ],
+  "regression_check": [
+    {"finding_id": "F2", "status": "not_verifiable", "evidence": "The current source packet was incomplete."}
+  ],
+  "what_held_up": "The report identifies the context gap honestly.",
+  "open_questions": ["Provide the current source for F2."],
+  "rework_brief": null,
+  "escalation": {
+    "root_causes": ["The unresolved F2 issue was omitted from current findings."],
+    "human_decision": "Decide whether to provide the missing source or abandon this patch.",
+    "cheapest_path": "Resubmit the current source with F2 retained in the findings ledger."
+  },
+  "round_limit_reached": true
+}

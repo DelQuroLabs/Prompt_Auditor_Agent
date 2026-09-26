@@ -1,0 +1,45 @@
+{
+  "contract": "build-audit-handoff",
+  "version": 2,
+  "task_id": "gpt-build-audit-pair",
+  "build_revision": 0,
+  "spec": "Create a reusable human-supervised pair of GPT Build and Audit agents that produce complete, evidence-based, adversarially tested GPT design packages.",
+  "acceptance_criteria": [
+    "The Builder produces a complete GPT package with a behavior contract, configuration, instructions, capability limits, Knowledge and Action boundaries, evals, and a valid v2 handoff.",
+    "The Auditor independently reviews complete current artifacts, maps every criterion to evidence, and reports supported findings without inventing a defect quota.",
+    "The loop preserves current snapshots and finding IDs across at most three audit rounds, with final human escalation after audit 3.",
+    "The pair explicitly handles prompt injection, secrets, privacy, uncertainty, unsupported capabilities, tool failure, and live-verification limits.",
+    "The retained v2 examples and protocol validator pass, while a live Custom GPT test is honestly marked unavailable."
+  ],
+  "artifacts": [
+    {"path": "builder-gpt.md", "status": "modified", "lines_changed": 190, "summary": "GPT-specific Builder instructions with complete artifact snapshots, capability matrix, eval plan, and bounded rework.", "snapshot_included": true},
+    {"path": "auditor-gpt.md", "status": "modified", "lines_changed": 180, "summary": "Independent GPT Auditor instructions with adversarial coverage for tools, Knowledge, privacy, injection, and output contracts.", "snapshot_included": true},
+    {"path": "README.md", "status": "modified", "lines_changed": 120, "summary": "Setup, workflow, limits, and self-application record.", "snapshot_included": true},
+    {"path": "contract.md", "status": "modified", "lines_changed": 22, "summary": "Adds the GPT design profile while preserving protocol v2.", "snapshot_included": true},
+    {"path": "gpt-config.json", "status": "modified", "lines_changed": 55, "summary": "GPT-specific names, starters, capability defaults, and Knowledge files.", "snapshot_included": true},
+    {"path": "standards.template.md", "status": "modified", "lines_changed": 70, "summary": "GPT platform, Knowledge, Action, safety, evaluation, and maintenance standards.", "snapshot_included": true},
+    {"path": "prompts/", "status": "modified", "lines_changed": 100, "summary": "GPT-specific kickoff, audit, rework, and escalation packet templates.", "snapshot_included": true},
+    {"path": "SMOKE-TEST.md", "status": "modified", "lines_changed": 95, "summary": "GPT-specific calibration, injection, capability, and round-accounting checks.", "snapshot_included": true}
+  ],
+  "context_manifest": [
+    {"path": "contract.md", "purpose": "Normative shared handoff and audit rules.", "supplied": true},
+    {"path": "schemas/", "purpose": "Machine-readable v2 packet schemas.", "supplied": true},
+    {"path": "tools/validate_examples.py", "purpose": "Cross-field and linked-chain validation.", "supplied": true},
+    {"path": "standards.md", "purpose": "Project-specific GPT standards; template supplied, completed project file unavailable.", "supplied": false}
+  ],
+  "verification": [
+    {"check": "Retained upstream examples and protocol chain", "command": "python tools/validate_examples.py", "result": "pass", "environment": "agent_sandbox", "evidence": "Validator output: Validated 6 bundled examples and 4 expected-rejection fixtures against Draft 2020-12 schemas and protocol cross-field rules."},
+    {"check": "Static self-audit of Builder and Auditor prompts", "command": "Manual inspection against GPT-specific acceptance criteria", "result": "pass", "environment": "static_only", "evidence": "Each criterion was traced to the final prompt, contract, configuration, templates, or smoke test."},
+    {"check": "Live Custom GPT behavior and editor capability verification", "command": "Configure and exercise both GPTs in the target platform", "result": "not-run", "environment": "not_run", "evidence": "No live Custom GPT instance or target-platform execution environment was supplied."}
+  ],
+  "self_audit": [
+    {"area": "scope", "note": "Upstream code-oriented workflow was generalized to GPT design artifacts and platform capability limits.", "severity": "MINOR", "confidence": "high"},
+    {"area": "live behavior", "note": "The pair was statically reviewed; live GPT behavior, editor labels, and platform features remain unverified.", "severity": "MINOR", "confidence": "high"},
+    {"area": "protocol", "note": "Existing v2 schemas and validator were retained rather than replaced.", "severity": "NIT", "confidence": "high"}
+  ],
+  "assumptions": ["The target use is two private Custom GPTs operated by a human who manually transfers complete packets between them."],
+  "flags": ["Complete project standards must be filled in before a real task.", "A model PASS is not live-platform or production approval."],
+  "open_questions": ["Which target platform plan and editor capabilities will be used in production?", "What project-specific safety, data-retention, and release standards should be added to standards.md?"],
+  "base_revision": "upstream DelQuroLabs/gpt_Build-Audit_Agent v2.2.0",
+  "confidence": "high"
+}

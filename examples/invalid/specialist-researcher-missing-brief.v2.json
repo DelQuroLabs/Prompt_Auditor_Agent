@@ -1,0 +1,14 @@
+{
+  "contract": "specialist-report",
+  "version": 2,
+  "task_id": "research-missing-brief",
+  "build_revision": 0,
+  "specialist": "researcher",
+  "trigger_reasons": ["kickoff lists a current vendor API unknown"],
+  "summary": "Research pass omitted its required brief.",
+  "scope_review": { "reviewed_paths": [], "unavailable_context": [] },
+  "findings": [],
+  "non_findings": [],
+  "open_questions": [],
+  "recommended_to_auditor": []
+}

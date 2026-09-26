@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://delqurolabs.github.io/gpt_Build-Audit_Agent/schemas/specialist-report.v2.schema.json",
+  "title": "Specialist Report v2",
+  "description": "Advisory domain review that feeds the Auditor. Does not issue PASS/FAIL verdicts or rework_briefs. Provisional finding IDs use S-prefix until the Auditor promotes supported items into task-wide F-IDs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "version",
+    "task_id",
+    "build_revision",
+    "specialist",
+    "trigger_reasons",
+    "summary",
+    "scope_review",
+    "findings",
+    "non_findings",
+    "open_questions",
+    "recommended_to_auditor",
+    "research_brief"
+  ],
+  "properties": {
+    "contract": { "const": "specialist-report" },
+    "version": { "const": 2 },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 1
+    },
+    "build_revision": { "type": "integer", "minimum": 0, "maximum": 2 },
+    "specialist": {
+      "enum": ["security", "ux", "perf", "data", "release", "researcher"]
+    },
+    "trigger_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "scope_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewed_paths", "unavailable_context"],
+      "properties": {
+        "reviewed_paths": { "type": "array", "items": { "type": "string" } },
+        "unavailable_context": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/specialistFinding" }
+    },
+    "non_findings": {
+      "type": "array",
+      "description": "Checks performed that did not yield a supported finding. Prevents silent skips.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "recommended_to_auditor": {
+      "type": "array",
+      "description": "Provisional S-IDs the specialist believes the Auditor should evaluate for promotion to F-IDs.",
+      "items": { "type": "string", "pattern": "^S[1-9][0-9]*$" },
+      "uniqueItems": true
+    },
+    "research_brief": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["unknowns_addressed", "facts", "sources", "recommendations"],
+          "properties": {
+            "unknowns_addressed": { "type": "array", "items": { "type": "string" } },
+            "facts": { "type": "array", "items": { "type": "string" } },
+            "sources": { "type": "array", "items": { "type": "string" } },
+            "recommendations": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "specialist": { "const": "researcher" } },
+        "required": ["specialist"]
+      },
+      "then": {
+        "required": ["research_brief"],
+        "properties": {
+          "research_brief": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "specialist": { "not": { "const": "researcher" } } },
+        "required": ["specialist"]
+      },
+      "then": {
+        "properties": {
+          "research_brief": { "type": "null" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "specialistFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "severity",
+        "category",
+        "file",
+        "lines",
+        "quote",
+        "trigger",
+        "expected",
+        "actual",
+        "impact",
+        "fix",
+        "evidence_basis",
+        "evidence_detail"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S[1-9][0-9]*$" },
+        "severity": { "enum": ["BLOCKER", "MAJOR", "MINOR", "NIT"] },
+        "category": {
+          "enum": [
+            "correctness",
+            "security",
+            "failure_handling",
+            "verification_gap",
+            "testing",
+            "performance",
+            "maintainability",
+            "standards",
+            "regression",
+            "ux",
+            "data",
+            "ops",
+            "other"
+          ]
+        },
+        "file": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+        "lines": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+        "quote": { "type": "string" },
+        "trigger": { "type": "string", "minLength": 1 },
+        "expected": { "type": "string", "minLength": 1 },
+        "actual": { "type": "string", "minLength": 1 },
+        "impact": { "type": "string", "minLength": 1 },
+        "fix": { "type": "string", "minLength": 1 },
+        "evidence_basis": {
+          "enum": ["runtime_reproduced", "static_proof", "provided_log"]
+        },
+        "evidence_detail": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

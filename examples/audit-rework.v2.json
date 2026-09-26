@@ -1,0 +1,57 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 1,
+  "audit_round": 2,
+  "verdict": "FAIL",
+  "summary": "The final-window defect is fixed, but the reworked implementation still accepts booleans as integer windows.",
+  "scope_review": {
+    "reviewed_paths": ["examples/fixtures/moving-average-rework.py"],
+    "unavailable_context": []
+  },
+  "verification_assessment": {
+    "status": "static_only",
+    "note": "The current source was reviewed statically; no project runner was used."
+  },
+  "findings": [
+    {
+      "id": "F2",
+      "severity": "MAJOR",
+      "category": "correctness",
+      "file": "examples/fixtures/moving-average-rework.py",
+      "lines": "2-3",
+      "quote": "not isinstance(window, int) or window <= 0",
+      "trigger": "Call with values=[2, 4, 6] and window=True.",
+      "expected": "Raise ValueError because bool is excluded from the window type contract.",
+      "actual": "True passes the integer check and is treated as window 1.",
+      "impact": "Invalid input is silently accepted and produces output under an unintended window.",
+      "fix": "Reject bool explicitly before the integer check.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "In Python, bool is a subclass of int, so isinstance(True, int) is true."
+    }
+  ],
+  "regression_check": [
+    {
+      "finding_id": "F1",
+      "status": "fixed",
+      "evidence": "The revised range stop includes the final complete window."
+    }
+  ],
+  "what_held_up": "The rework fixed the originally reported final-window omission.",
+  "open_questions": [],
+  "rework_brief": {
+    "must_fix": ["F2"],
+    "frozen": [
+      {
+        "id": "F1",
+        "reason": "The round-1 defect is verified fixed by inspection of the current range stop."
+      }
+    ],
+    "deferred": [],
+    "constraints": ["Keep the fix limited to invalid-window validation and a focused check."],
+    "stop_conditions": ["F2: Passing window=True raises ValueError while valid integer windows still work."]
+  },
+  "escalation": null,
+  "round_limit_reached": false
+}

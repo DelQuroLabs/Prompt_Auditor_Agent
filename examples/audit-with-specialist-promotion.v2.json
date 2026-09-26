@@ -1,0 +1,52 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "session-cookie",
+  "build_revision": 0,
+  "audit_round": 1,
+  "verdict": "FAIL",
+  "summary": "Security specialist S1 promoted: session cookie lacks HttpOnly and Secure on the auth path.",
+  "scope_review": {
+    "reviewed_paths": ["src/auth/session.ts", "specialist-report:security (same task_id and build_revision)"],
+    "unavailable_context": [
+      "production TLS terminator config"
+    ]
+  },
+  "verification_assessment": {
+    "status": "static_only",
+    "note": "Defect shown by Set-Cookie literal; specialist report S1 promoted to F1 after independent static confirmation."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "MAJOR",
+      "category": "security",
+      "file": "src/auth/session.ts",
+      "lines": "14-18",
+      "quote": "res.setHeader('Set-Cookie', `sid=${token}; Path=/`)",
+      "trigger": "Issue a session after login and inspect Set-Cookie.",
+      "expected": "Session cookie includes HttpOnly, Secure, and SameSite.",
+      "actual": "Only Path=/ is set.",
+      "impact": "XSS can steal the session cookie; cleartext exposure risk if TLS is misconfigured.",
+      "fix": "Add HttpOnly; Secure; SameSite=Lax or Strict.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "Set-Cookie string has no HttpOnly or Secure. Promoted from specialist S1 after confirming quote in supplied source."
+    }
+  ],
+  "regression_check": [],
+  "what_held_up": "Session token is taken from a server-side helper rather than a client-supplied raw id in the supplied snippet.",
+  "open_questions": [
+    "Does the production TLS terminator add cookie flags? This is not established by the supplied packet."
+  ],
+  "rework_brief": {
+    "must_fix": ["F1"],
+    "frozen": [],
+    "deferred": [],
+    "constraints": ["Limit the change to cookie attribute flags unless tests require a helper."],
+    "stop_conditions": [
+      "F1: Set-Cookie on login includes HttpOnly and Secure; a test or static quote shows both attributes."
+    ]
+  },
+  "escalation": null,
+  "round_limit_reached": false
+}

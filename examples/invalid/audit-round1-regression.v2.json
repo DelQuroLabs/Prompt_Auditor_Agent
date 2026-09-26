@@ -1,0 +1,20 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 0,
+  "audit_round": 1,
+  "verdict": "PASS",
+  "summary": "Invalid fixture: a round-1 report cannot contain regression statuses.",
+  "scope_review": {"reviewed_paths": ["moving_average.py"], "unavailable_context": []},
+  "verification_assessment": {"status": "static_only", "note": "Static review only."},
+  "findings": [],
+  "regression_check": [
+    {"finding_id": "F1", "status": "open", "evidence": "There was no previous audit report."}
+  ],
+  "what_held_up": "This deliberately invalid report is a negative validator fixture.",
+  "open_questions": [],
+  "rework_brief": null,
+  "escalation": null,
+  "round_limit_reached": false
+}

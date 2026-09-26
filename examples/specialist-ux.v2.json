@@ -1,0 +1,39 @@
+{
+  "contract": "specialist-report",
+  "version": 2,
+  "task_id": "login-form-ui",
+  "build_revision": 0,
+  "specialist": "ux",
+  "trigger_reasons": [
+    "path:src/components/LoginForm.tsx",
+    "acceptance criteria mention user-visible error text"
+  ],
+  "summary": "Login form returns null while submitting and never surfaces network failures.",
+  "scope_review": {
+    "reviewed_paths": ["src/components/LoginForm.tsx"],
+    "unavailable_context": ["global toast system", "i18n catalog"]
+  },
+  "findings": [
+    {
+      "id": "S1",
+      "severity": "MAJOR",
+      "category": "ux",
+      "file": "src/components/LoginForm.tsx",
+      "lines": "32-40",
+      "quote": "if (submitting) return null;",
+      "trigger": "Submit valid credentials on a slow network.",
+      "expected": "Show a loading state and keep the form structure; announce progress to assistive tech.",
+      "actual": "Component unmounts to null; user sees a blank region with no status.",
+      "impact": "Users cannot tell whether login is in progress; screen reader users lose context.",
+      "fix": "Keep the form mounted; set aria-busy; disable the submit button; show inline progress text.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "Conditional return null removes all DOM for the form during submit."
+    }
+  ],
+  "non_findings": [
+    "Submit button has a visible text label in the idle state."
+  ],
+  "open_questions": [],
+  "recommended_to_auditor": ["S1"],
+  "research_brief": null
+}

@@ -1,0 +1,40 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 0,
+  "audit_round": 1,
+  "verdict": "PASS_WITH_NOTES",
+  "summary": "No blocking defect was found; one low-impact naming note remains.",
+  "scope_review": {
+    "reviewed_paths": ["moving_average.py"],
+    "unavailable_context": []
+  },
+  "verification_assessment": {
+    "status": "static_only",
+    "note": "No project test runner was available; this note does not concern runtime correctness."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "MINOR",
+      "category": "standards",
+      "file": "moving_average.py",
+      "lines": "1",
+      "quote": "def moving_average(values, window):",
+      "trigger": "The attached project standard requires a docstring for each public function, and this function has none.",
+      "expected": "A concise docstring explains the inputs, output, and invalid-window behavior.",
+      "actual": "The public function has no docstring.",
+      "impact": "Low-impact discoverability and maintenance cost; runtime behavior is unaffected.",
+      "fix": "Add the required concise docstring.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "The function definition is present in the supplied source and no docstring follows it; the supplied project standard requires one."
+    }
+  ],
+  "regression_check": [],
+  "what_held_up": "The implementation follows the explicit behavior criteria and keeps dependencies unchanged.",
+  "open_questions": [],
+  "rework_brief": null,
+  "escalation": null,
+  "round_limit_reached": false
+}

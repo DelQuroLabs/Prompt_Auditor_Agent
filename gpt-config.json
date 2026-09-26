@@ -1,0 +1,71 @@
+{
+  "package_version": "3.1.0-gpt-profile",
+  "protocol_version": 2,
+  "source_profile": "DelQuroLabs/gpt_Build-Audit_Agent",
+  "builder": {
+    "name": "GPT Build Engineer",
+    "description": "Builds complete, testable GPT packages from a goal, with explicit capability limits, Knowledge and Action boundaries, evals, and an evidence-based handoff.",
+    "instructions_file": "builder-gpt.md",
+    "conversation_starters": [
+      "New GPT task — here are the audience, goal, constraints, and acceptance criteria.",
+      "Build this GPT package from the supplied spec and include an eval suite.",
+      "Rework only the Auditor's must_fix findings using this complete current package.",
+      "Plan only: identify blocking questions and the smallest safe design before implementation."
+    ],
+    "capabilities": {
+      "web_search": false,
+      "canvas": false,
+      "image_generation": false,
+      "code_interpreter": true,
+      "actions": false,
+      "note": "Code Interpreter is optional for safe, self-contained checks. It does not provide live GPT, repository, CI, deployment, or account access. Enable other capabilities only when the target GPT's spec requires them and the data-flow is documented."
+    },
+    "actions": [],
+    "knowledge_files": [
+      "contract.md",
+      "schemas/build-audit-handoff.v2.schema.json",
+      "standards.md"
+    ]
+  },
+  "auditor": {
+    "name": "GPT Audit Engineer",
+    "description": "Independently red-teams a complete GPT build against criteria, platform limits, tool and Knowledge boundaries, safety, and adversarial evals; returns a bounded rework brief.",
+    "instructions_file": "auditor-gpt.md",
+    "conversation_starters": [
+      "Audit this complete GPT build packet against the canonical spec.",
+      "Map every acceptance criterion to artifact or test evidence and attack the failure paths.",
+      "Re-audit this revision against the previous must_fix, deferred, and frozen finding ledger.",
+      "Review this Knowledge and Action plan for injection, privacy, authorization, and failure-handling risks."
+    ],
+    "capabilities": {
+      "web_search": false,
+      "canvas": false,
+      "image_generation": false,
+      "code_interpreter": true,
+      "actions": false,
+      "note": "Use Code Interpreter only for safe, self-contained parsing or tests. Static review is valid; do not call it live GPT or production verification."
+    },
+    "actions": [],
+    "knowledge_files": [
+      "contract.md",
+      "schemas/audit-report.v2.schema.json",
+      "schemas/specialist-report.v2.schema.json",
+      "standards.md"
+    ]
+  },
+  "optional_specialists": {
+    "enabled_by_default": false,
+    "trigger_matrix_file": "specialists/TRIGGERS.md",
+    "report_schema": "schemas/specialist-report.v2.schema.json",
+    "knowledge_files": ["contract.md", "schemas/specialist-report.v2.schema.json"],
+    "default_max_per_revision": 2,
+    "profiles": [
+      { "id": "security", "name": "GPT Security Specialist", "instructions_file": "specialists/security-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } },
+      { "id": "ux", "name": "GPT UX Specialist", "instructions_file": "specialists/ux-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } },
+      { "id": "perf", "name": "GPT Perf/Reliability Specialist", "instructions_file": "specialists/perf-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } },
+      { "id": "data", "name": "GPT Data/Migration Specialist", "instructions_file": "specialists/data-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } },
+      { "id": "release", "name": "GPT Release/DevOps Specialist", "instructions_file": "specialists/release-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } },
+      { "id": "researcher", "name": "GPT Research Specialist", "instructions_file": "specialists/researcher-gpt.md", "capabilities": { "web_search": false, "code_interpreter": false, "actions": false } }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "contract": "specialist-report",
+  "version": 2,
+  "task_id": "orphan-recommendation",
+  "build_revision": 0,
+  "specialist": "security",
+  "trigger_reasons": ["standards mark a session trust boundary"],
+  "summary": "No supported issue in supplied source.",
+  "scope_review": { "reviewed_paths": [], "unavailable_context": [] },
+  "findings": [],
+  "non_findings": ["No supported finding."],
+  "open_questions": [],
+  "recommended_to_auditor": ["S2"],
+  "research_brief": null
+}

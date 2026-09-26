@@ -1,0 +1,46 @@
+{
+  "contract": "audit-report",
+  "version": 2,
+  "task_id": "moving-average",
+  "build_revision": 0,
+  "audit_round": 1,
+  "verdict": "FAIL",
+  "summary": "The current implementation omits the final valid window and violates an explicit acceptance criterion.",
+  "scope_review": {
+    "reviewed_paths": ["examples/fixtures/moving-average-bad.py"],
+    "unavailable_context": []
+  },
+  "verification_assessment": {
+    "status": "static_only",
+    "note": "The defect is demonstrated by tracing the supplied range bound; no runtime tool was used."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "BLOCKER",
+      "category": "correctness",
+      "file": "examples/fixtures/moving-average-bad.py",
+      "lines": "8",
+      "quote": "range(len(values) - window)",
+      "trigger": "Call with values=[2, 4, 6] and window=2.",
+      "expected": "Return [3.0, 5.0], one mean for each complete window.",
+      "actual": "Returns [3.0], omitting the final complete window.",
+      "impact": "The output is wrong on an ordinary valid input and violates a hard acceptance criterion.",
+      "fix": "Include the final starting index by using len(values) - window + 1 as the range stop.",
+      "evidence_basis": "static_proof",
+      "evidence_detail": "For n=3 and window=2, range(3-2) yields only index 0; index 1 is also valid."
+    }
+  ],
+  "regression_check": [],
+  "what_held_up": "The function validates that the window is positive before dividing.",
+  "open_questions": [],
+  "rework_brief": {
+    "must_fix": ["F1"],
+    "frozen": [],
+    "deferred": [],
+    "constraints": ["Keep the patch limited to the off-by-one correction and its test."],
+    "stop_conditions": ["F1: The trigger returns both expected window means and a test covers the final valid window."]
+  },
+  "escalation": null,
+  "round_limit_reached": false
+}
